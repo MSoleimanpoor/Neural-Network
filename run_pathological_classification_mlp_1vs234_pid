@@ -15,7 +15,7 @@ source("neural_network_classification_train_AUC.R")
 source("neural_network_classification_test.R")
 
 pathway <- "pid"
-
+pathway <- "Hallmark"
 for (cohort in cohorts) {
   if (dir.exists(sprintf("%s/%s", result_path, cohort)) == FALSE) {
     dir.create(sprintf("%s/%s", result_path, cohort)) 
