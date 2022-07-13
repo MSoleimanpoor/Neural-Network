@@ -32,8 +32,8 @@ neural_network_classification_train <- function(input_dim, N_pathway, k, y, para
     k_list[[i]] <- k[,,i] 
   }
   y[y == -1] <- 0 
-  model %>% fit(k_list, y, epochs = 10000, batch_size = parameters$bs, shuffle = TRUE)
-  model %>% save_model_hdf5("my_model.h5")
+  model %>% fit(k_list, y, epochs = parameters$iteration_count, batch_size = parameters$bs, shuffle = TRUE)
+  #model %>% save_model_hdf5("my_model.h5")
 return(model)
 }
 
