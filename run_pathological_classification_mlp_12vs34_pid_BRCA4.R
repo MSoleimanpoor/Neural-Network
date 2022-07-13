@@ -2,13 +2,9 @@ library(AUC)
 library(keras)
 data_path <- "./data"
 result_path <- "./result_12vs34_pid"
-cohorts<- c("TCGA-BRCA")
-#cohorts <- c("TCGA-BRCA", "TCGA-COAD", "TCGA-ESCA", "TCGA-HNSC", "TCGA-KICH",
-#             "TCGA-KIRC", "TCGA-KIRP", "TCGA-LIHC", "TCGA-LUAD", "TCGA-LUSC",
-#            "TCGA-PAAD", "TCGA-READ", "TCGA-STAD", "TCGA-TGCT", "TCGA-THCA")
-#cohorts <- c("TCGA-ACC",  "TCGA-BLCA", "TCGA-BRCA", "TCGA-COAD", "TCGA-ESCA",
-#             "TCGA-HNSC", "TCGA-KICH", "TCGA-KIRC", "TCGA-KIRP", "TCGA-LIHC",
-#             "TCGA-LUAD", "TCGA-LUSC","TCGA-MESO", "TCGA-READ", "TCGA-SKCM","TCGA-STAD", "TCGA-THCA", "TCGA-UVM")
+cohorts <- c("TCGA-BRCA", "TCGA-COAD", "TCGA-HNSC",
+             "TCGA-KIRC", "TCGA-KIRP", "TCGA-LIHC", "TCGA-LUAD", "TCGA-LUSC",
+            "TCGA-READ", "TCGA-STAD", "TCGA-TGCT", "TCGA-THCA")
 
 #args <- commandArgs(trailingOnly = TRUE)
 #cohorts <- cohorts[as.numeric(args[[1]]) %% length(cohorts) + 1]
@@ -18,24 +14,13 @@ source("classification_helper.R")
 source("neural_network_classification_train_AUC.R")
 source("neural_network_classification_test.R")
 
-#cohorts <- c("TCGA-BRCA", "TCGA-COAD", "TCGA-ESCA", "TCGA-HNSC", "TCGA-KICH",
-#             "TCGA-KIRC", "TCGA-KIRP", "TCGA-LIHC", "TCGA-LUAD", "TCGA-LUSC",
-#            "TCGA-PAAD", "TCGA-READ", "TCGA-STAD", "TCGA-TGCT", "TCGA-THCA")
-#cohorts <- c("TCGA-KICH")
-
-
-#data_path <- "C:/Users/KATY/Desktop/arezou/gsbc-master/data"
-#result_path <- "C:/Users/KATY/Desktop/arezou/gsbc-master/Result"
-#data_path <- "./data"
-#result_path <- "./results_1_vs_234"
 pathway <- "pid"
 
 for (cohort in cohorts) {
   if (dir.exists(sprintf("%s/%s", result_path, cohort)) == FALSE) {
     dir.create(sprintf("%s/%s", result_path, cohort)) 
-  }
- replication=82 
-#  for (replication in 69:71) {
+  } 
+  for (replication in 1:100) {
     if (file.exists(sprintf("%s/%s/mlp_pathway_%s_measure_AUROC_replication_%d_result.RData", result_path, cohort, pathway, replication)) == FALSE) {
       load(sprintf("%s/%s.RData", data_path, cohort))
       
@@ -44,15 +29,11 @@ for (cohort in cohorts) {
       X <- log2(TCGA$mrna[common_patients,] + 1)
       y <- rep(NA, length(common_patients))
       
-     # y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage I",  "Stage IA",  "Stage IB",  "Stage IC")] <- +1
-     # y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage II", "Stage IIA", "Stage IIB", "Stage IIC",
-     #                                                             "Stage III", "Stage IIIA", "Stage IIIB", "Stage IIIC",
-     #                                                             "Stage IV",  "Stage IVA",  "Stage IVB",  "Stage IVC")] <- -1
- 
-      y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage I",  "Stage IA",  "Stage IB",  "Stage IC",
-                                                                 "Stage II", "Stage IIA", "Stage IIB", "Stage IIC")] <- +1
-      y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage III", "Stage IIIA", "Stage IIIB", "Stage IIIC",
-                                                                 "Stage IV",  "Stage IVA",  "Stage IVB",  "Stage IVC")] <- -1
+      y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage I",  "Stage IA",  "Stage IB",  "Stage IC")] <- +1
+      y[TCGA$clinical[common_patients, "pathologic_stage"] %in% c("Stage II", "Stage IIA", "Stage IIB", "Stage IIC",
+                                                                  "Stage III", "Stage IIIA", "Stage IIIB", "Stage IIIC",
+                                                                  "Stage IV",  "Stage IVA",  "Stage IVB",  "Stage IVC")] <- -1
+
      
       valid_patients <- which(is.na(y) == FALSE)
       valid_features <- as.numeric(which(apply(X[valid_patients,], 2, sd) != 0))
@@ -168,4 +149,4 @@ for (cohort in cohorts) {
       save("result", file = sprintf("%s/%s/mlp_pathway_%s_measure_AUROC_replication_%d_result.RData", result_path, cohort, pathway, replication))
     } 
   }
-#}
+}
