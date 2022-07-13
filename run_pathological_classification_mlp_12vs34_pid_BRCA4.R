@@ -1,13 +1,13 @@
 library(AUC)
 library(keras)
 data_path <- "./data"
-result_path <- "./result_12vs34_pid"
+result_path <- "./result_1vs234_pid"
 cohorts <- c("TCGA-BRCA", "TCGA-COAD", "TCGA-HNSC",
              "TCGA-KIRC", "TCGA-KIRP", "TCGA-LIHC", "TCGA-LUAD", "TCGA-LUSC",
             "TCGA-READ", "TCGA-STAD", "TCGA-TGCT", "TCGA-THCA")
 
-#args <- commandArgs(trailingOnly = TRUE)
-#cohorts <- cohorts[as.numeric(args[[1]]) %% length(cohorts) + 1]
+args <- commandArgs(trailingOnly = TRUE)
+cohorts <- cohorts[as.numeric(args[[1]]) %% length(cohorts) + 1]
 
 
 source("classification_helper.R")
