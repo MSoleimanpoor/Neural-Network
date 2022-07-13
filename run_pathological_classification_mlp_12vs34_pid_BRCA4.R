@@ -48,10 +48,7 @@ for (cohort in cohorts) {
       fold_count <- 4
       train_ratio <- 0.8
       iteration_count <- 10000
-      
-################################
-      max_iteration <- 100
-      sample_per_gradient_update <- 10 
+       
 ################################
       
       pathways <- read_pathways(pathway)
@@ -97,10 +94,10 @@ for (cohort in cohorts) {
           parameters <- list()
           parameters$bs <- bs
           #parameters$epsilon <- epsilon
-          #parameters$iteration_count <- iteration_count
+          parameters$iteration_count <- iteration_count
           
-          parameters$max_iteration <- max_iteration
-          parameters$sample_per_gradient_update <- sample_per_gradient_update
+          #parameters$max_iteration <- max_iteration
+          #parameters$sample_per_gradient_update <- sample_per_gradient_update
           
           model <- neural_network_classification_train(N_train, N_pathway, K_train, y_train, parameters)
           prediction <- neural_network_classification_test(K_test, model, N_pathway)
